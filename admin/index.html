@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#060914">
+<title>Abdo-Sit · لوحة التحكم</title>
+<link rel="icon" href="/icons/icon.svg" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+<div id="login" class="login" hidden>
+  <form class="lbox glass" id="lform" autocomplete="on">
+    <img src="/icons/icon.svg" alt="" width="72" height="72">
+    <h1>Abdo-Sit <small>Admin</small></h1>
+    <input name="email" type="email" placeholder="البريد الإلكتروني" required autocomplete="username">
+    <input name="password" type="password" placeholder="كلمة المرور" required autocomplete="current-password">
+    <input name="code" id="code" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="رمز التحقق (2FA)" hidden autocomplete="one-time-code">
+    <p class="err" id="lerr"></p>
+    <button class="btn pri" type="submit">دخول</button>
+  </form>
+</div>
+
+<div id="shell" class="shell" hidden>
+  <aside class="side glass">
+    <div class="brand"><img src="/icons/icon.svg" width="36" height="36" alt=""><b class="en">Abdo-Sit</b></div>
+    <nav id="nav">
+      <a href="#/" data-r="dash">📊 <span>الإحصائيات</span></a>
+      <a href="#/apps" data-r="apps">📦 <span>التطبيقات</span></a>
+      <a href="#/new" data-r="new">➕ <span>رفع تطبيق</span></a>
+      <a href="#/reviews" data-r="reviews">💬 <span>التقييمات</span><i id="pend" hidden></i></a>
+      <a href="#/categories" data-r="categories">🗂️ <span>التصنيفات</span></a>
+      <a href="#/users" data-r="users">👥 <span>المستخدمون</span></a>
+      <a href="#/activity" data-r="activity">🧾 <span>سجل النشاط</span></a>
+      <a href="#/settings" data-r="settings">⚙️ <span>الإعدادات</span></a>
+    </nav>
+    <button class="btn sec2" id="logout">خروج</button>
+  </aside>
+  <main id="view" class="view"></main>
+</div>
+<script src="/js/admin.js"></script>
+</body>
+</html>

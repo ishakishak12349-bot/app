@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Abdo-Sit — متجر التطبيقات</title>
+<meta name="description" content="Abdo-Sit: متجر تطبيقات أنيق لتحميل تطبيقاتي لأندرويد وiOS وويندوز وماك.">
+<meta name="theme-color" content="#060914">
+<meta property="og:type" content="website"><meta property="og:site_name" content="Abdo-Sit">
+<meta property="og:title" content="Abdo-Sit — متجر التطبيقات"><meta property="og:description" content="حمّل تطبيقاتي لجميع الأنظمة بنقرة واحدة.">
+<meta property="og:image" content="icons/icon.svg"><meta name="twitter:card" content="summary">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Abdo-Sit","inLanguage":"ar"}</script>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22e3ff"/><stop offset=".5" stop-color="#4f8cff"/><stop offset="1" stop-color="#9b5cff"/></linearGradient>
+    <linearGradient id="ls" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a2a9e"/><stop offset="1" stop-color="#1b1260"/></linearGradient>
+    <symbol id="logo" viewBox="0 0 512 512"><rect x="48" y="72" width="416" height="400" rx="100" fill="url(#ls)"/><rect x="48" y="40" width="416" height="400" rx="100" fill="url(#lg)"/><path d="M256 118 146 372h58l16-42h72l16 42h58L256 118zm0 82 28 70h-56l28-70z" fill="#fff" fill-rule="evenodd"/></symbol>
+  </defs>
+</svg>
+
+<header class="nav"><div class="nav-in">
+  <a href="#/" class="logo" aria-label="Abdo-Sit"><svg><use href="#logo"/></svg><span class="en">Abdo-Sit</span></a>
+  <nav class="links" id="links">
+    <a href="#/" data-r="home">الرئيسية</a>
+    <a href="#/categories" data-r="categories">التصنيفات</a>
+    <a href="#/search" data-r="search">بحث متقدم</a>
+    <a href="#/downloads" data-r="downloads">تحميلاتي</a>
+    <a href="#/about" data-r="about">عن المطور</a>
+  </nav>
+  <div class="sp"></div>
+  <form class="sbox" id="sform" role="search">
+    <input id="sq" type="search" placeholder="ابحث عن تطبيق…" autocomplete="off" aria-label="بحث">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+  </form>
+  <button class="ibtn" id="theme" aria-label="تبديل المظهر" title="تبديل المظهر">🌙</button>
+</div></header>
+
+<main id="app" aria-live="polite"></main>
+<footer class="foot"><span class="en">© <span id="yr"></span> Abdo-Sit</span> · صُنع بشغف ✨</footer>
+
+<nav class="tabbar" id="tabbar">
+  <a href="#/" data-r="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11 12 3l9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>الرئيسية</a>
+  <a href="#/categories" data-r="categories"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg>التصنيفات</a>
+  <a href="#/search" data-r="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>بحث</a>
+  <a href="#/downloads" data-r="downloads"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-4-4m4 4 4-4M4 21h16"/></svg>تحميلاتي</a>
+  <a href="#/about" data-r="about"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>المطور</a>
+</nav>
+
+<div class="pwa glass" id="pwa"><span style="flex:1">ثبّت Abdo-Sit كتطبيق على جهازك</span><button class="btn pri" id="pwaBtn" style="padding:8px 16px">تثبيت</button><button class="ibtn" id="pwaX" aria-label="إغلاق">✕</button></div>
+
+<script src="config.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Abdo-Sit Upload</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#070a16;--glass:rgba(255,255,255,.06);--bd:rgba(255,255,255,.12);--t:#e8ecff;--m:#8d96c4;--c1:#4f8cff;--c2:#9b5cff;--c3:#22e3ff}
+*{box-sizing:border-box;margin:0}
+body{font-family:Cairo,Inter,sans-serif;background:var(--bg);color:var(--t);min-height:100vh;padding:32px 16px;
+background-image:radial-gradient(600px 400px at 85% -5%,rgba(155,92,255,.35),transparent),radial-gradient(500px 400px at 5% 10%,rgba(34,227,255,.22),transparent)}
+.wrap{max-width:820px;margin:auto}
+h1{font-size:28px;font-weight:800;background:linear-gradient(90deg,var(--c3),var(--c1),var(--c2));-webkit-background-clip:text;color:transparent}
+p.sub{color:var(--m);margin:6px 0 24px}
+.glass{background:var(--glass);border:1px solid var(--bd);border-radius:20px;backdrop-filter:blur(18px);padding:20px}
+input[type=password]{width:100%;background:rgba(0,0,0,.35);border:1px solid var(--bd);color:var(--t);padding:12px 14px;border-radius:12px;font-family:inherit;direction:ltr}
+.drop{margin-top:18px;border:2px dashed rgba(79,140,255,.5);border-radius:20px;padding:46px 16px;text-align:center;cursor:pointer;transition:.25s}
+.drop.over{border-color:var(--c3);background:rgba(34,227,255,.08);transform:scale(1.01);box-shadow:0 0 40px rgba(34,227,255,.2)}
+.drop b{font-size:20px}.drop small{display:block;color:var(--m);margin-top:6px}
+.item{margin-top:14px}.row{display:flex;justify-content:space-between;gap:10px;font-size:14px}
+.name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;direction:ltr}
+.bar{height:8px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden;margin:10px 0}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--c3),var(--c1),var(--c2));transition:width .15s}
+.link{display:flex;gap:8px;align-items:center;margin-top:8px}
+.link input{flex:1;background:rgba(0,0,0,.35);border:1px solid var(--bd);color:var(--c3);padding:8px 10px;border-radius:10px;direction:ltr;font-size:13px}
+button{background:linear-gradient(135deg,var(--c1),var(--c2));border:0;color:#fff;padding:9px 14px;border-radius:10px;font-family:inherit;cursor:pointer;font-weight:600}
+.err{color:#ff6b86}.ok{color:#43e6a0}
+img.qr{width:96px;height:96px;border-radius:10px;background:#fff;padding:4px;margin-top:8px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Abdo-Sit · خدمة الرفع</h1>
+  <p class="sub">ارفع حتى 2GB لكل ملف — رفع مجزأ يستأنف تلقائياً عند الانقطاع.</p>
+  <div class="glass">
+    <label>مفتاح API الخاص بك</label>
+    <input id="key" type="password" placeholder="UPLOAD_API_KEY" autocomplete="off">
+  </div>
+  <div class="drop" id="drop"><b>اسحب الملفات هنا أو اضغط للاختيار</b><small>APK · EXE · ZIP · DMG · صور · فيديو — رفع متعدد</small></div>
+  <input id="file" type="file" multiple hidden>
+  <div id="list"></div>
+</div>
+<script>
+const CHUNK = 8 * 1024 * 1024;
+const $ = (s) => document.querySelector(s);
+const keyEl = $('#key'); keyEl.value = sessionStorage.getItem('k') || '';
+keyEl.onchange = () => sessionStorage.setItem('k', keyEl.value);
+const fmt = (n) => n > 1e9 ? (n/1e9).toFixed(2)+' GB' : n > 1e6 ? (n/1e6).toFixed(1)+' MB' : (n/1e3).toFixed(0)+' KB';
+const H = () => ({ 'x-api-key': keyEl.value });
+const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+$('#drop').onclick = () => $('#file').click();
+$('#file').onchange = (e) => [...e.target.files].forEach(upload);
+['dragenter','dragover'].forEach(ev => $('#drop').addEventListener(ev, e => { e.preventDefault(); $('#drop').classList.add('over'); }));
+['dragleave','drop'].forEach(ev => $('#drop').addEventListener(ev, e => { e.preventDefault(); $('#drop').classList.remove('over'); }));
+$('#drop').addEventListener('drop', e => [...e.dataTransfer.files].forEach(upload));
+
+async function upload(file) {
+  const el = document.createElement('div');
+  el.className = 'glass item';
+  el.innerHTML = `<div class="row"><span class="name"></span><span class="st">…</span></div><div class="bar"><i></i></div><div class="out"></div>`;
+  el.querySelector('.name').textContent = `${file.name} (${fmt(file.size)})`;
+  $('#list').prepend(el);
+  const st = el.querySelector('.st'), bar = el.querySelector('i'), out = el.querySelector('.out');
+  try {
+    const r = await fetch('/api/upload/init', { method: 'POST', headers: { ...H(), 'content-type': 'application/json' }, body: JSON.stringify({ name: file.name, size: file.size }) });
+    const init = await r.json(); if (!r.ok) throw new Error(init.error);
+    let offset = init.received;
+    while (offset < file.size) {
+      const end = Math.min(offset + CHUNK, file.size);
+      let tries = 0;
+      for (;;) {
+        try {
+          const res = await fetch(`/api/upload/${init.uploadId}?offset=${offset}`, { method: 'PUT', headers: H(), body: file.slice(offset, end) });
+          const j = await res.json();
+          if (res.status === 409 && typeof j.received === 'number') { offset = j.received; break; }
+          if (!res.ok) throw new Error(j.error || res.status);
+          offset = j.received; break;
+        } catch (e) {
+          if (++tries > 8) throw e;
+          st.textContent = 'انقطاع… إعادة المحاولة'; await sleep(1500 * tries);
+        }
+      }
+      const p = Math.round(offset / file.size * 100);
+      bar.style.width = p + '%'; st.textContent = p + '%';
+    }
+    const c = await fetch(`/api/upload/${init.uploadId}/complete`, { method: 'POST', headers: H() });
+    const done = await c.json(); if (!c.ok) throw new Error(done.error);
+    st.textContent = 'تم ✓'; st.className = 'st ok';
+    out.innerHTML = `<div class="link"><input readonly value="${done.url}"><button>نسخ</button></div><img class="qr" src="${done.qr}" alt="QR">`;
+    out.querySelector('button').onclick = () => navigator.clipboard.writeText(done.url);
+  } catch (e) { st.textContent = 'فشل: ' + e.message; st.className = 'st err'; }
+}
+</script>
+</body>
+</html>

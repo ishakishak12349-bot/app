@@ -1,0 +1,14 @@
+{
+  "name": "abdosit-upload-service",
+  "version": "1.0.0",
+  "private": true,
+  "main": "src/server.js",
+  "scripts": { "start": "node src/server.js" },
+  "dependencies": {
+    "better-sqlite3": "^11.3.0",
+    "cors": "^2.8.5",
+    "express": "^4.21.0",
+    "helmet": "^8.0.0",
+    "qrcode": "^1.5.4"
+  }
+}
